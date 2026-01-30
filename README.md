@@ -7,8 +7,9 @@ This service provides a RESTful API to manage Tasks, Documents, and Knowledge Ba
 ## Features
 
 - **Tasks**: Create, Retrieve, Delete tasks.
-- **Docs**: Create new Documents (Docx).
-- **Wiki**: Create new Knowledge Base nodes.
+- **Docs**: Create new Documents (Docx), Retrieve document info, raw content, and blocks.
+- **Wiki**: Create nodes, Search nodes, Move nodes, Move Docs to Wiki, Update node titles.
+- **Docx**: Detailed block management (Get, Create, Update, Delete Children, Convert).
 
 ## Prerequisites
 
@@ -82,3 +83,13 @@ go run cmd/server/main.go
   "obj_type": "docx"
 }
 ```
+
+### Docx Block Operations
+**GET** `/api/v1/docx/v1/documents/:document_id/blocks/:block_id`
+**GET** `/api/v1/docx/v1/documents/:document_id/blocks/:block_id/children`
+**POST** `/api/v1/docx/v1/documents/:document_id/blocks/:block_id/children`
+**PATCH** `/api/v1/docx/v1/documents/:document_id/blocks/:block_id`
+**DELETE** `/api/v1/docx/v1/documents/:document_id/blocks/:block_id/children/batch_delete`
+**POST** `/api/v1/docx/v1/documents/blocks/convert`
+
+See `docs/API_SPEC.md` for full API details.

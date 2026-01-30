@@ -12,7 +12,9 @@ The `lark-integration-skill` is a Go-based microservice designed as a "Skill" fo
 - [x] Dockerization and deployment.
 - [x] Implementation of Task Management (Create, Get, Delete).
 - [x] Implementation of Document Management (Create Docx, Get Info, Get Raw Content, List Blocks).
-- [x] Implementation of Wiki/Knowledge Base (Create Node).
+- [x] Implementation of Document Management (Create Docx, Get Info, Get Raw Content, List Blocks).
+- [x] Implementation of Wiki/Knowledge Base (Create Node, Search, Move, Update Title, Move Docs to Wiki).
+- [x] Implementation of Docx Block Management (Get, Create, Update, Delete Children, Convert Content).
 - [x] Configuration via Environment Variables and `.env` file.
 
 ## Technical Stack

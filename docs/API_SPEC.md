@@ -29,6 +29,34 @@ All endpoints are prefixed with `/api/v1`.
   - Query Params: `page_token`, `page_size`.
 
 ## Wiki
-- `POST /wiki`
-  - Create a new node in a Wiki space.
-  - Body: `CreateWikiNodeRequest` (SpaceID, ParentNodeToken, Title, ObjType)
+- `POST /wiki/search`
+  - Search for wiki nodes.
+  - Body: `WikiSearchRequest` (Query)
+- `GET /wiki/nodes/:node_token`
+  - Get wiki node information.
+- `GET /wiki/spaces/:space_id/nodes`
+  - List nodes in a wiki space.
+- `POST /wiki/spaces/:space_id/nodes/:node_token/move`
+  - Move a wiki node.
+- `POST /wiki/spaces/:space_id/nodes/:node_token/update_title`
+  - Update a wiki node's title.
+- `POST /wiki/spaces/:space_id/nodes/move_docs_to_wiki`
+  - Move an existing Doc/Docx to Wiki.
+
+## Docx (V1)
+- `GET /docx/v1/documents/:document_id/blocks/:block_id`
+  - Get a specific block.
+- `GET /docx/v1/documents/:document_id/blocks/:block_id/children`
+  - Get children blocks of a specific block.
+- `POST /docx/v1/documents/:document_id/blocks/:block_id/children`
+  - Create children blocks.
+  - Body: `CreateDocBlockRequest` (Children)
+- `PATCH /docx/v1/documents/:document_id/blocks/:block_id`
+  - Update a specific block.
+  - Body: `UpdateDocBlockRequest`
+- `DELETE /docx/v1/documents/:document_id/blocks/:block_id/children/batch_delete`
+  - Batch delete children blocks.
+  - Body: `DeleteDocBlockChildrenRequest` (StartIndex, EndIndex)
+- `POST /docx/v1/documents/blocks/convert`
+  - Convert Markdown/HTML content to blocks.
+  - Body: `ConvertContentToBlocksRequest` (Content, ContentType)
