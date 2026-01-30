@@ -26,34 +26,33 @@
 
 ## 与 Clawdbot (OpenClaw) 集成
 
-本服务旨在作为 "Skill" 或 "Tool" 供运行在 **Clawdbot** 上的 AI Agent 使用。
+本服务旨在作为 **Skill (技能)** 供运行在 **Clawdbot** 上的 AI Agent 使用。
 
-### 方法 1: OpenAPI 导入 (推荐)
+### 配置方法
 
-Clawdbot 支持通过 OpenAPI 规范导入工具。
+要使用此技能，请将本项目所在的路径添加到您的 `clawdbot.json` (或 `openclaw.json`) 配置文件中。
 
-1.  部署本服务 (例如部署到 `http://your-server:8000`)。
-2.  在 Clawdbot 中，导航至 **Tools > Import**。
-3.  选择 **OpenAPI / Swagger**。
-4.  输入 `openapi.yaml` 文件的 URL (例如 `https://raw.githubusercontent.com/SealinGp/lark-integration-skill/main/docs/openapi.yaml` 或您自行托管的地址)。
-5.  Clawdbot 将自动识别并导入所有 15+ 个工具。
+**`clawdbot.json` 配置示例:**
 
-### 方法 2: 手动注册
-
-如果需要手动注册工具，可以将它们定义为指向 [API 使用](#api-使用) 中列出的端点的 `HTTP` 工具。
-
-**示例: 创建任务工具**
-- **Method**: `POST`
-- **URL**: `http://your-server:8000/api/v1/tasks`
-- **Body**:
-  ```json
-  {
-    "summary": "{{summary}}",
-    "description": "{{description}}",
-    "due_time": {{due_time}},
-    "user_id": "{{user_id}}"
+```json
+{
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "/absolute/path/to/lark-integration-skill"
+      ]
+    }
+  },
+  "tools": {
+    "allow": ["*"],
+    "deny": []
   }
-  ```
+}
+```
+
+*   请将 `/absolute/path/to/lark-integration-skill` 替换为您克隆此仓库的实际绝对路径。
+*   重启 Clawdbot/OpenClaw 以加载该技能。
+
 
 ## 安装与部署
 

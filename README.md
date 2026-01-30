@@ -24,36 +24,36 @@ This service provides a RESTful API to manage Tasks, Documents, and Knowledge Ba
     -   `docx:document:read_write`
     -   `docx:document:read`
 
-## integration with Clawdbot (OpenClaw)
 
-This service is designed to be consumed as a "Skill" or "Tool" by AI Agents running on **Clawdbot**.
+## Integration with Clawdbot (OpenClaw)
 
-### Method 1: OpenAPI Import (Recommended)
+This service is designed to be consumed as a **Skill** by AI Agents running on **Clawdbot**.
 
-Clawdbot supports importing tools via OpenAPI specification.
+### Configuration
 
-1.  Deploy this service (e.g., to `http://your-server:8000`).
-2.  In Clawdbot, navigate to **Tools > Import**.
-3.  Select **OpenAPI / Swagger**.
-4.  Enter the URL to the `openapi.yaml` file (e.g., `https://raw.githubusercontent.com/SealinGp/lark-integration-skill/main/docs/openapi.yaml` or your hosted version).
-5.  Clawdbot will automatically detect all available 15+ tools.
+To use this skill, add the path of this project to your `clawdbot.json` (or `openclaw.json`) configuration file.
 
-### Method 2: Manual Registration
+**Example `clawdbot.json`:**
 
-If you need to register tools manually, define them as `HTTP` tools pointing to the endpoints listed in [API Usage](#api-usage).
-
-**Example: Create Task Tool**
-- **Method**: `POST`
-- **URL**: `http://your-server:8000/api/v1/tasks`
-- **Body**:
-  ```json
-  {
-    "summary": "{{summary}}",
-    "description": "{{description}}",
-    "due_time": {{due_time}},
-    "user_id": "{{user_id}}"
+```json
+{
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "/absolute/path/to/lark-integration-skill"
+      ]
+    }
+  },
+  "tools": {
+    "allow": ["*"],
+    "deny": []
   }
-  ```
+}
+```
+
+*   Replace `/absolute/path/to/lark-integration-skill` with the actual path where you cloned this repository.
+*   Restart Clawdbot/OpenClaw to load the skill.
+
 
 ## Setup & Deployment
 
