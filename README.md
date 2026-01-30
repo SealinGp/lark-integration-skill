@@ -1,5 +1,7 @@
 # Lark Integration Skill
 
+[中文文档](README_cn.md)
+
 A lightweight backend service (Skill) designed for **clawdbot**, enabling integration with Lark (Feishu).
 
 This service provides a RESTful API to manage Tasks, Documents, and Knowledge Base nodes in Lark.
