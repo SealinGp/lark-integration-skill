@@ -19,6 +19,39 @@ This service provides a RESTful API to manage Tasks, Documents, and Knowledge Ba
     -   `drive:drive` (View/Edit files)
     -   `wiki:wiki` (Manage Knowledge Base)
     -   `contact:user.id:readonly` (To resolve OpenID)
+    -   `docx:document:read_write`
+    -   `docx:document:read`
+
+## integration with Clawdbot (OpenClaw)
+
+This service is designed to be consumed as a "Skill" or "Tool" by AI Agents running on **Clawdbot**.
+
+### Method 1: OpenAPI Import (Recommended)
+
+Clawdbot supports importing tools via OpenAPI specification.
+
+1.  Deploy this service (e.g., to `http://your-server:8000`).
+2.  In Clawdbot, navigate to **Tools > Import**.
+3.  Select **OpenAPI / Swagger**.
+4.  Enter the URL to the `openapi.yaml` file (e.g., `https://raw.githubusercontent.com/SealinGp/lark-integration-skill/main/docs/openapi.yaml` or your hosted version).
+5.  Clawdbot will automatically detect all available 15+ tools.
+
+### Method 2: Manual Registration
+
+If you need to register tools manually, define them as `HTTP` tools pointing to the endpoints listed in [API Usage](#api-usage).
+
+**Example: Create Task Tool**
+- **Method**: `POST`
+- **URL**: `http://your-server:8000/api/v1/tasks`
+- **Body**:
+  ```json
+  {
+    "summary": "{{summary}}",
+    "description": "{{description}}",
+    "due_time": {{due_time}},
+    "user_id": "{{user_id}}"
+  }
+  ```
 
 ## Setup & Deployment
 

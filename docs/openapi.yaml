@@ -1,0 +1,918 @@
+openapi: 3.0.0
+info:
+  title: Lark Integration Skill API
+  description: A RESTful API service to manage Lark Tasks, Documents, and Wiki nodes. Designed for integration with AI Agents like Clawdbot.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local Development Server
+
+paths:
+  /tasks:
+    post:
+      summary: Create a new task
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '200':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_TaskResponse'
+    get:
+      summary: List tasks (Not fully implemented in example, placeholder)
+      operationId: listTasks
+      responses:
+        '200':
+          description: List of tasks
+  /tasks/{task_id}:
+    get:
+      summary: Get task details
+      operationId: getTask
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_TaskResponse'
+    delete:
+      summary: Delete a task
+      operationId: deleteTask
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task deleted
+
+  /docs:
+    post:
+      summary: Create a new Document (Docx)
+      operationId: createDoc
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDocRequest'
+      responses:
+        '200':
+          description: Document created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_DocResponse'
+
+  /docs/{doc_token}:
+    get:
+      summary: Get Document Metadata
+      operationId: getDocMeta
+      parameters:
+        - name: doc_token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Document metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_DocInfoResponse'
+
+  /docs/{doc_token}/raw:
+    get:
+      summary: Get Document Raw Content
+      operationId: getDocRawContent
+      parameters:
+        - name: doc_token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Raw content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_DocRawContentResponse'
+
+  /docs/{doc_token}/blocks:
+    get:
+      summary: Get Document Blocks
+      operationId: getDocBlocks
+      parameters:
+        - name: doc_token
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page_token
+          in: query
+          schema:
+            type: string
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Document blocks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_DocBlocksResponse'
+
+  /wiki:
+    post:
+      summary: Create a Wiki Node
+      operationId: createWikiNode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWikiNodeRequest'
+      responses:
+        '200':
+          description: Wiki node created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_WikiNodeResponse'
+
+  /wiki/search:
+    post:
+      summary: Search Wiki Nodes
+      operationId: searchWikiNode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WikiSearchRequest'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_WikiSearchResponse'
+
+  /wiki/nodes/{node_token}:
+    get:
+      summary: Get Wiki Node Info
+      operationId: getWikiNodeInfo
+      parameters:
+        - name: node_token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Node info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_WikiNodeInfoResponse'
+
+  /wiki/spaces/{space_id}/nodes:
+    get:
+      summary: List Wiki Nodes in Space
+      operationId: listWikiNodes
+      parameters:
+        - name: space_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: parent_node_token
+          in: query
+          schema:
+            type: string
+        - name: page_token
+          in: query
+          schema:
+            type: string
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of nodes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_WikiNodeListResponse'
+
+  /wiki/spaces/{space_id}/nodes/{node_token}/move:
+    post:
+      summary: Move Wiki Node
+      operationId: moveWikiNode
+      parameters:
+        - name: space_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: node_token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveWikiNodeRequest'
+      responses:
+        '200':
+          description: Node moved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_MoveWikiNodeResponse'
+
+  /wiki/spaces/{space_id}/nodes/{node_token}/update_title:
+    post:
+      summary: Update Wiki Node Title
+      operationId: updateWikiNodeTitle
+      parameters:
+        - name: space_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: node_token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWikiNodeTitleRequest'
+      responses:
+        '200':
+          description: Title updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_Common'
+
+  /wiki/spaces/{space_id}/nodes/move_docs_to_wiki:
+    post:
+      summary: Move Docs to Wiki
+      operationId: moveDocsToWiki
+      parameters:
+        - name: space_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveDocsToWikiRequest'
+      responses:
+        '200':
+          description: Doc moved to wiki
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_MoveDocsToWikiResponse'
+
+  /docx/v1/documents/{document_id}/blocks/{block_id}:
+    get:
+      summary: Get Document Block
+      operationId: getDocBlock
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: block_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Block details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_GetDocBlockResponse'
+    patch:
+      summary: Update Document Block
+      operationId: updateDocBlock
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: block_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDocBlockRequest'
+      responses:
+        '200':
+          description: Block updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_UpdateDocBlockResponse'
+
+  /docx/v1/documents/{document_id}/blocks/{block_id}/children:
+    get:
+      summary: Get Block Children
+      operationId: getDocBlockChildren
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: block_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page_token
+          in: query
+          schema:
+            type: string
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of children blocks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_GetDocBlockChildrenResponse'
+    post:
+      summary: Create Block Children
+      operationId: createDocBlockChildren
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: block_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDocBlockRequest'
+      responses:
+        '200':
+          description: Children created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_CreateDocBlockResponse'
+
+  /docx/v1/documents/{document_id}/blocks/{block_id}/children/batch_delete:
+    delete:
+      summary: Batch Delete Block Children
+      operationId: batchDeleteDocBlockChildren
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: block_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteDocBlockChildrenRequest'
+      responses:
+        '200':
+          description: Children deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_DeleteDocBlockChildrenResponse'
+
+  /docx/v1/documents/blocks/convert:
+    post:
+      summary: Convert Content to Blocks
+      operationId: convertContentToBlocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvertContentToBlocksRequest'
+      responses:
+        '200':
+          description: Converted blocks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse_ConvertContentToBlocksResponse'
+
+components:
+  schemas:
+    APIResponse_Common:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+        data:
+          type: object
+
+    APIResponse_TaskResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/TaskResponse'
+
+    APIResponse_DocResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DocResponse'
+
+    APIResponse_DocInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DocInfoResponse'
+
+    APIResponse_DocRawContentResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DocRawContentResponse'
+    
+    APIResponse_DocBlocksResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DocBlocksResponse'
+
+    APIResponse_WikiNodeResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/WikiNodeResponse'
+
+    APIResponse_WikiSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/WikiSearchResponse'
+
+    APIResponse_WikiNodeInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/WikiNodeInfoResponse'
+    
+    APIResponse_WikiNodeListResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/WikiNodeListResponse'
+
+    APIResponse_MoveWikiNodeResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MoveWikiNodeResponse'
+
+    APIResponse_MoveDocsToWikiResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MoveDocsToWikiResponse'
+
+    APIResponse_GetDocBlockResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/GetDocBlockResponse'
+
+    APIResponse_UpdateDocBlockResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/UpdateDocBlockResponse'
+
+    APIResponse_GetDocBlockChildrenResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/GetDocBlockChildrenResponse'
+
+    APIResponse_CreateDocBlockResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/CreateDocBlockResponse'
+
+    APIResponse_DeleteDocBlockChildrenResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DeleteDocBlockChildrenResponse'
+
+    APIResponse_ConvertContentToBlocksResponse:
+      allOf:
+        - $ref: '#/components/schemas/APIResponse_Common'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ConvertContentToBlocksResponse'
+
+
+    CreateTaskRequest:
+      type: object
+      required:
+        - summary
+      properties:
+        summary:
+          type: string
+        description:
+          type: string
+        due_time:
+          type: integer
+          format: int64
+        user_id:
+          type: string
+
+    TaskResponse:
+      type: object
+      properties:
+        task_id:
+          type: string
+        summary:
+          type: string
+        url:
+          type: string
+
+    CreateDocRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        folder_token:
+          type: string
+        content:
+          type: string
+
+    DocResponse:
+      type: object
+      properties:
+        doc_token:
+          type: string
+        url:
+          type: string
+        title:
+          type: string
+
+    DocInfoResponse:
+      type: object
+      properties:
+        doc_token:
+          type: string
+        title:
+          type: string
+        create_time:
+          type: string
+        update_time:
+          type: string
+        owner_user_id:
+          type: string
+
+    DocRawContentResponse:
+      type: object
+      properties:
+        content:
+          type: string
+
+    DocBlocksResponse:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            type: object
+        has_more:
+          type: boolean
+        page_token:
+          type: string
+
+    CreateWikiNodeRequest:
+      type: object
+      required:
+        - space_id
+        - title
+      properties:
+        space_id:
+          type: string
+        parent_node_token:
+          type: string
+        title:
+          type: string
+        obj_type:
+          type: string
+          default: "docx"
+
+    WikiNodeResponse:
+      type: object
+      properties:
+        node_token:
+          type: string
+        obj_token:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+
+    WikiSearchRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+        page_size:
+          type: integer
+        page_token:
+          type: string
+
+    WikiSearchResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WikiNodeInfoResponse'
+        has_more:
+          type: boolean
+        page_token:
+          type: string
+
+    WikiNodeInfoResponse:
+      type: object
+      properties:
+        node_token:
+          type: string
+        obj_token:
+          type: string
+        obj_type:
+          type: string
+        parent_node_token:
+          type: string
+        node_type:
+          type: string
+        title:
+          type: string
+        has_child:
+          type: boolean
+
+    WikiNodeListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WikiNodeInfoResponse'
+        has_more:
+          type: boolean
+        page_token:
+          type: string
+
+    MoveWikiNodeRequest:
+      type: object
+      properties:
+        target_parent_token:
+          type: string
+        target_space_id:
+          type: string
+
+    MoveWikiNodeResponse:
+      type: object
+      properties:
+        node_token:
+          type: string
+        obj_token:
+          type: string
+
+    UpdateWikiNodeTitleRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+
+    MoveDocsToWikiRequest:
+      type: object
+      required:
+        - obj_type
+        - obj_token
+      properties:
+        parent_wiki_token:
+          type: string
+        obj_type:
+          type: string
+        obj_token:
+          type: string
+        apply:
+          type: boolean
+
+    MoveDocsToWikiResponse:
+      type: object
+      properties:
+        wiki_token:
+          type: string
+        task_id:
+          type: string
+        applied:
+          type: boolean
+
+    CreateDocBlockRequest:
+      type: object
+      required:
+        - children
+      properties:
+        children:
+          type: array
+          items:
+            type: object
+        index:
+           type: integer
+
+    CreateDocBlockResponse:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            type: object
+
+    UpdateDocBlockRequest:
+      type: object
+      properties:
+        # Simplified, usually SDK struct
+        content:
+           type: object
+
+    UpdateDocBlockResponse:
+      type: object
+      properties:
+        block:
+          type: object
+
+    GetDocBlockRequest:
+      type: object
+
+    GetDocBlockResponse:
+      type: object
+      properties:
+        block:
+          type: object
+
+    GetDocBlockChildrenRequest:
+      type: object
+      properties:
+        page_token:
+          type: string
+        page_size:
+          type: integer
+
+    GetDocBlockChildrenResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+        has_more:
+          type: boolean
+        page_token:
+          type: string
+
+    DeleteDocBlockChildrenRequest:
+      type: object
+      properties:
+        start_index:
+          type: integer
+        end_index:
+          type: integer
+
+    DeleteDocBlockChildrenResponse:
+      type: object
+      properties:
+        document_revision_id:
+          type: integer
+    
+    ConvertContentToBlocksRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+        content_type:
+          type: string
+          default: "markdown"
+    
+    ConvertContentToBlocksResponse:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            type: object
