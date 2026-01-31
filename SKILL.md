@@ -34,4 +34,16 @@ This skill provides access to the following capabilities:
     -   Delete Children: `DELETE /api/v1/docx/v1/documents/:document_id/blocks/:block_id/children/batch_delete`
     -   Convert Content: `POST /api/v1/docx/v1/documents/blocks/convert`
 
+## Automatic URL Handling
+
+When a user provides a Feishu/Lark URL, automatically use the appropriate API to fetch its content.
+
+### Wiki URLs
+**Pattern**: `https://*.feishu.cn/wiki/:token`
+**Action**: Call `GET /api/v1/wiki/nodes/:token` (e.g. `https://tparts-global.feishu.cn/wiki/IqgjwXyXoi90jLkMMQccHs6Enz5` -> token: `IqgjwXyXoi90jLkMMQccHs6Enz5`)
+
+### Docx URLs
+**Pattern**: `https://*.feishu.cn/docx/:token`
+**Action**: Call `GET /api/v1/docs/:token`
+
 Refer to `docs/openapi.yaml` or `README.md` for payload details.
